@@ -35,6 +35,12 @@ export class Position {
 
     @Prop({default: false})
     muted: boolean
+
+    @Prop()
+    lastX: number
+
+    @Prop()
+    lastY: number
 }
 
 export const PositionSchema = SchemaFactory.createForClass(Position)

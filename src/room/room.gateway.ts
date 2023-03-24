@@ -35,6 +35,9 @@ export class RoomGateway implements OnGatewayDisconnect {
       this.activeSockets = this.activeSockets.filter(
       socket => socket.id !== client.id
     )
+      
+    const {lastX, lastY} = await this.service.getUserLastPositionClientId(client.id)
+    await this.service.userLastPosition(client.id, lastX, lastY)
 
     await this.service.deleteUsersPosition(client.id)
     client.broadcast.emit(`${existingOnSocket.room}-remove-user`, {socketId: client.id});
@@ -49,12 +52,25 @@ export class RoomGateway implements OnGatewayDisconnect {
     const existingOnSocket = this.activeSockets.find(socket => socket.room === link && socket.id === client.id)
     if(!existingOnSocket){
       this.activeSockets.push({room:link, id: client.id, userId})
+      
+      const lastPositionUser = await this.service.getUserLastPositionClientId(client.id)
+      let x, y
+      if(lastPositionUser){
+        x = lastPositionUser.lastX,
+        y = lastPositionUser.lastY
+      }else{
+        x = Math.floor(Math.random() * 9)
+        y=  Math.floor(Math.random() * 9)
+        /*const {checkNewX, checkNewY} = await this.service.checkPosition(link, x, y)
+        x = checkNewX
+        y = checkNewY*/
+      }
 
       const dto = {
         link,
         userId,
-        x: Math.floor(Math.random() *9),
-        y: Math.floor(Math.random() *9),
+        x,
+        y,
         orientation: 'down'
       } as UpdateUserPositionDto
 
@@ -94,5 +110,17 @@ export class RoomGateway implements OnGatewayDisconnect {
     await this.service.updateUserMute(payload)
     const users = await this.service.listUsersPositionByLink(link)
     this.wss.emit(`${link}-update-user-list`, {users})
+  }
+
+  @SubscribeMessage('call-user')
+    async callUser (client: Socket, data: any){
+      this.logger.debug(`callUser: ${client.id} to: ${data.to}`)
+    client.to(data.to).emit('call-made', {offer: data.offer, socket: client.id})
+  }
+
+  @SubscribeMessage('make-answer')
+    async makeAnswer (client: Socket, data: any){
+      this.logger.debug(`makeAnswer: ${client.id} to: ${data.to}`)
+    client.to(data.to).emit('answer-made', {answer: data.answer, socket: client.id})
   }
 }

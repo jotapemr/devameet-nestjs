@@ -88,7 +88,32 @@ export class RoomService {
 
     }
     
-    
+    async userLastPosition(clientId: string, x:number, y:number){
+        const position = await this.positionModel.findOne({clientId})
+        if(position){
+            position.lastX = x
+            position.lastY = y
+            await position.save()
+        }
+    }
+
+    async getUserLastPositionClientId(clientId: string){
+        const position = await this.positionModel.findOne({clientId})
+        return position
+    }
+
+    /*
+    async checkPosition(link: string, x: number, y: number) {
+        const meet = await this._getMeet(link)
+        const position = await this.positionModel.findOne({ meet, x, y })
+        if(position){
+            const checkNewX = Math.floor(Math.random() * 9)
+            const checkNewY = Math.floor(Math.random() * 9)
+            return {checkNewX, checkNewY}
+        }
+    }
+    */
+   
     async _getMeet(link:string){
         const meet = await this.meetModel.findOne({link})
         if(!meet){
