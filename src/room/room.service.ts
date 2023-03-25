@@ -102,17 +102,17 @@ export class RoomService {
         return position
     }
 
-    /*
+    
     async checkPosition(link: string, x: number, y: number) {
         const meet = await this._getMeet(link)
         const position = await this.positionModel.findOne({ meet, x, y })
         if(position){
-            const checkNewX = Math.floor(Math.random() * 9)
-            const checkNewY = Math.floor(Math.random() * 9)
-            return {checkNewX, checkNewY}
+            const checkUserNewX = Math.floor(Math.random() * 9)
+            const checkUserNewY = Math.floor(Math.random() * 9)
+            return {checkUserNewX, checkUserNewY}
         }
     }
-    */
+    
    
     async _getMeet(link:string){
         const meet = await this.meetModel.findOne({link})

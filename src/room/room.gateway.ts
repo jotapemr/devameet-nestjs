@@ -59,11 +59,9 @@ export class RoomGateway implements OnGatewayDisconnect {
         x = lastPositionUser.lastX,
         y = lastPositionUser.lastY
       }else{
-        x = Math.floor(Math.random() * 9)
-        y=  Math.floor(Math.random() * 9)
-        /*const {checkNewX, checkNewY} = await this.service.checkPosition(link, x, y)
-        x = checkNewX
-        y = checkNewY*/
+        const {checkUserNewX, checkUserNewY} = await this.service.checkPosition(link, x, y)
+        x = checkUserNewX
+        y = checkUserNewY
       }
 
       const dto = {
