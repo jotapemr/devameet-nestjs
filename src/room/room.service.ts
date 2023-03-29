@@ -111,6 +111,7 @@ export class RoomService {
             const checkUserNewY = Math.floor(Math.random() * 9)
             return {checkUserNewX, checkUserNewY}
         }
+        return {checkUserNewX: 2, checkUserNewY: 2}
     }
     
    
