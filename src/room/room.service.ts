@@ -87,34 +87,7 @@ export class RoomService {
         await this.positionModel.updateMany({user, meet}, {muted: dto.muted})
 
     }
-    
-    async userLastPosition(clientId: string, x:number, y:number){
-        const position = await this.positionModel.findOne({clientId})
-        if(position){
-            position.lastX = x
-            position.lastY = y
-            await position.save()
-        }
-    }
-
-    async getUserLastPositionClientId(clientId: string){
-        const position = await this.positionModel.findOne({clientId})
-        return position
-    }
-
-    
-    async checkPosition(link: string, x: number, y: number) {
-        const meet = await this._getMeet(link)
-        const position = await this.positionModel.findOne({ meet, x, y })
-        if(position){
-            const checkUserNewX = Math.floor(Math.random() * 9)
-            const checkUserNewY = Math.floor(Math.random() * 9)
-            return {checkUserNewX, checkUserNewY}
-        }
-        return {checkUserNewX: 2, checkUserNewY: 2}
-    }
-    
-   
+     
     async _getMeet(link:string){
         const meet = await this.meetModel.findOne({link})
         if(!meet){
