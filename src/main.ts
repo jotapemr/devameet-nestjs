@@ -7,7 +7,9 @@ async function bootstrap() {
     logger: ['debug', 'error', 'log', 'warn']
   });
 
-  app.enableCors();
+  app.enableCors({
+    origin: 'https://devameet-vuejs.vercel.app'
+  });
 
   app.useGlobalPipes(
     new ValidationPipe({
